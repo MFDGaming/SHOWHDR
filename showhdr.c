@@ -9,10 +9,10 @@
 #define BIOS_INFO_GET_LOAD_FROM_FILE(X) (*((uint8_t *)X+37))
 #define BIOS_INFO_GET_REBOOT_REQUIRED(X) (*((uint8_t *)X+38))
 #define BIOS_INFO_GET_UPDATE_ALL_OF_IMAGE(X) (*((uint8_t *)X+39))
-#define BIOS_INFO_GET_LOGICAL_AREA_STRING(X) ((uint8_t *)X+40) /* 24? */
+#define BIOS_INFO_GET_LOGICAL_AREA_STRING(X) ((uint8_t *)X+40) /* 16? */
 #define GET_TIME_STAMP(X) ((uint8_t *)X+64) /* 19? */
-#define GET_THIS_FILE_START_ADDR(X) (*(uint16_t *)(((uint8_t *)X)+83))
-#define GET_THIS_FILE_DATA_LENGTH(X) (*(uint16_t *)(((uint8_t *)X)+85))
+#define GET_THIS_FILE_START_ADDR(X) (*(uint32_t *)(((uint8_t *)X)+80))
+#define GET_THIS_FILE_DATA_LENGTH(X) (*(uint32_t *)(((uint8_t *)X)+84))
 #define GET_LOGICAL_AREA_TYPE(X) (*((uint8_t *)X+88))
 #define GET_LAST_FILE_IN_CHAIN(X) (*((uint8_t *)X+89))
 #define GET_FLASH_KEYWORD(X) ((uint8_t *)X+90) /* 6 */
