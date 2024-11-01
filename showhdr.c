@@ -3,14 +3,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define GET_IMAGE_TITLE(X) ((uint8_t *)X) /* 32? */
+#define GET_IMAGE_TITLE(X) ((uint8_t *)X) /* 32 */
 #define BIOS_INFO_GET_LOGICAL_AREA_TYPE(X) (*((uint8_t *)X+32))
 #define BIOS_INFO_GET_LOGICAL_AREA_SIZE(X) (*(uint32_t *)(((uint8_t *)X)+33))
 #define BIOS_INFO_GET_LOAD_FROM_FILE(X) (*((uint8_t *)X+37))
 #define BIOS_INFO_GET_REBOOT_REQUIRED(X) (*((uint8_t *)X+38))
 #define BIOS_INFO_GET_UPDATE_ALL_OF_IMAGE(X) (*((uint8_t *)X+39))
-#define BIOS_INFO_GET_LOGICAL_AREA_STRING(X) ((uint8_t *)X+40) /* 24? */
-#define GET_TIME_STAMP(X) ((uint8_t *)X+64) /* 16? */
+#define BIOS_INFO_GET_LOGICAL_AREA_STRING(X) ((uint8_t *)X+40) /* 24 */
+#define GET_TIME_STAMP(X) ((uint8_t *)X+64) /* 15? */
+#define GET_FACTORY_CHECKSUM(X) (*((uint8_t *)X+79))
 #define GET_THIS_FILE_START_ADDR(X) (*(uint32_t *)(((uint8_t *)X)+80))
 #define GET_THIS_FILE_DATA_LENGTH(X) (*(uint32_t *)(((uint8_t *)X)+84))
 #define GET_LOGICAL_AREA_TYPE(X) (*((uint8_t *)X+88))
@@ -26,9 +27,9 @@ uint8_t CalcFactoryCheckSum(uint8_t *header) {
 
     header_ptr = header;
 
-    savec = header_ptr[79];
+    savec = GET_FACTORY_CHECKSUM(header_ptr);
 
-    header_ptr[79] = 0;
+    GET_FACTORY_CHECKSUM(header_ptr) = 0;
 
     for (int i = 0; i < 128; ++i) {
         chksum += header[0];
@@ -39,7 +40,7 @@ uint8_t CalcFactoryCheckSum(uint8_t *header) {
         chksum = 42;
     }
 
-    header_ptr[79] = savec;
+    GET_FACTORY_CHECKSUM(header_ptr) = savec;
     return chksum;
 }
 
@@ -120,7 +121,7 @@ int main(int argc, char **argv) {
     printf("Next File Name ----- : %s\n", GET_NEXT_FILE_NAME(header));
     printf("BIOS Reserved String : %s\n", GET_BIOS_RESERVED_STRING(header));
 
-    if (header[79] == CalcFactoryCheckSum(header)) {
+    if (GET_FACTORY_CHECKSUM(header) == CalcFactoryCheckSum(header)) {
         printf("\n\n** APPROVED FOR MANUFACTURING **\n");
     }
 
