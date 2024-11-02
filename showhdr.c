@@ -18,7 +18,7 @@
 #define GET_LAST_FILE_IN_CHAIN(X) (*((uint8_t *)X+89))
 #define GET_FLASH_KEYWORD(X) ((uint8_t *)X+90) /* 6 */
 #define GET_NEXT_FILE_NAME(X) ((uint8_t *)X+96) /* 16 */
-#define GET_BIOS_RESERVED_STRING(X) ((uint8_t *)X+112) /* 16 */
+#define GET_BIOS_RESERVED_STRING(X) ((uint8_t *)X+112) /* 48 */
 
 uint8_t CalcFactoryCheckSum(uint8_t *header) {
     uint8_t chksum = 0;
@@ -31,7 +31,7 @@ uint8_t CalcFactoryCheckSum(uint8_t *header) {
 
     GET_FACTORY_CHECKSUM(header_ptr) = 0;
 
-    for (int i = 0; i < 128; ++i) {
+    for (int i = 0; i < 160; ++i) {
         chksum += header[0];
         ++header;
     }
@@ -45,7 +45,7 @@ uint8_t CalcFactoryCheckSum(uint8_t *header) {
 }
 
 void print_init_help() {
-    printf("%s (Show FLASH Data Image Header -- Release 1.1)\n", "SHOWHDR");
+    printf("%s (Show FLASH Data Image Header -- Release 1.2)\n", "SHOWHDR");
     printf("Usage: showhdr.exe <image name>\n");
 }
 
@@ -66,7 +66,7 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
-    printf("%s (Show FLASH Data Image Header -- Release 1.1)\n", "SHOWHDR");
+    printf("%s (Show FLASH Data Image Header -- Release 1.2)\n", "SHOWHDR");
 
     fptr = fopen(argv[1], "rb");
 
@@ -75,8 +75,8 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
-    header = malloc(128);
-    fread(header, 128, 1, fptr);
+    header = malloc(160);
+    fread(header, 160, 1, fptr);
 
     for (int i = 0; i < 5; ++i) {
         if (GET_FLASH_KEYWORD(header)[i] != header_string[i]) {
